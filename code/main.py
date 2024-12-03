@@ -15,8 +15,13 @@ API_URL = os.environ['API_URL']
 
 SECRET_KEY = ''.join([secrets.choice(string.ascii_letters) for _ in range(32)])
 
-# Timeout in seconds (5 minutes)
-INACTIVITY_TIMEOUT = 5 * 60
+# Timeout in seconds
+INACTIVITY_TIMEOUT = os.getenv('INACTIVITY_TIMEOUT')
+if INACTIVITY_TIMEOUT:
+    INACTIVITY_TIMEOUT = int(INACTIVITY_TIMEOUT)
+else:
+    # Default value of 30 minutes if not otherwise provided
+    INACTIVITY_TIMEOUT = 30 * 60
 
 app = FastAPI(docs_url=None, redoc_url=None)
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
