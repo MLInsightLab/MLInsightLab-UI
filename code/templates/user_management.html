@@ -41,6 +41,21 @@
             </div>
         </div>
 
+        <!-- New Section: Update API Key -->
+        <div class="form-container">
+            <h3>Update API Key</h3>
+            <div class="form-group">
+                <label for="password-api-key">Password:</label>
+                <input type="password" id="password-api-key" placeholder="Enter your password">
+            </div>
+            <div class="form-group">
+                <button onclick="updateApiKey()">Generate New API Key</button>
+            </div>
+            <div id="api-key-display" style="margin-top: 10px; display: none;">
+                <p><strong>New API Key:</strong> <span id="new-api-key"></span></p>
+            </div>
+        </div>
+
         <!-- Admin Section (Only visible to admins) -->
         <div class="admin-section">
             <h3>Admin Controls</h3>
@@ -169,6 +184,40 @@
 
             document.getElementById('new-password').value = '';
             document.getElementById('confirm-password').value = '';
+        }
+
+        async function updateApiKey() {
+            const password = document.getElementById('password-api-key').value;
+            const username = localStorage.getItem('username');
+
+            authentication = btoa(`${username}:${password}`)
+            
+            if (!password) {
+                alert("Please enter your password.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/users/api_key/issue/${username}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Basic ${authentication}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    const apiKey = await response.json();
+                    document.getElementById('api-key-display').style.display = 'block';
+                    document.getElementById('new-api-key').textContent = apiKey;
+                } else {
+                    alert("Error generating API key.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
+            document.getElementById('password-api-key').value = '';
         }
 
         async function createUser() {
