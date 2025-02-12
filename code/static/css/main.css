@@ -200,6 +200,10 @@ th:hover {
     text-align: left;
 }
 
+.form-container h3 {
+    color: #4a90e2
+}
+
 .dashboard-tile {
     background-color: #ffffff;
     padding: 20px;
