@@ -43,6 +43,7 @@
         <p id="success-message"></p>
 
         <!-- Restart Server Button -->
+        <button class="reset-button" onclick="restartJupyter()">Restart Jupyter</button>
         <button class="reset-button" onclick="resetDeployment()">Restart Deployment Server</button>
 
     </div>
@@ -178,6 +179,30 @@
                 }
             } catch (error) {
                 document.getElementById('error-message').innerText = 'An error occurred while removing the model. Please try again later.';
+            }
+        }
+
+        async function restartJupyter() {
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('/api/restart-jupyter', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    document.getElementById('success-message').innerText = 'Jupyter service has been successfully restarted.';
+                } else if (response.status === 401) {
+                    document.getElementById('error-message').innerText = 'You are not authorized to restart the service.';
+                } else {
+                    document.getElementById('error-message').innerText = 'Failed to restart the Jupyter server. Please try again later.';
+                }
+            } catch (error) {
+                document.getElementById('error-message').innerText = 'An error occurred while restarting the server. Please try again later.';
             }
         }
 
