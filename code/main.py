@@ -1,12 +1,13 @@
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from starlette.middleware.sessions import SessionMiddleware
+from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, Request, Form
 from urllib.parse import urljoin
 import requests
 import secrets
 import string
+import base64
 import time
 import os
 
@@ -83,16 +84,35 @@ async def home(request: Request):
 
 @app.api_route("/mlflow/{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
 async def proxy_mlflow(path: str, request: Request):
-    if 'user' not in request.session or not check_inactivity(request):
-        return RedirectResponse(url="/login")
+    # Check if the user is authenticated via session
+    user = request.session.get('user')
+    
+    # If not authenticated via session, try basic auth
+    if not user:
+        # Attempt to get credentials from Basic Auth header
+        auth = request.headers.get("Authorization")
+        if auth and auth.startswith("Basic "):
+            # Decode the credentials from base64
+            auth_str = auth[len("Basic "):]
+            try:
+                decoded = base64.b64decode(auth_str).decode('utf-8')
+                username, password = decoded.split(":", 1)
+            except Exception:
+                raise  HTTPException(401, 'Unauthenticated')
+            
+            # Attempt to authenticate using the provided username and password
+            if not authenticate(username, password):
+                raise HTTPException(401, 'Unauthenticated')
+            user = username  # Successfully authenticated, use this user for role checking
+        else:
+            raise HTTPException(401, 'Unauthenticated')
 
+    # Session is valid, or basic authentication is successful
     with requests.Session() as sess:
-        resp = sess.get(
-            f'{API_URL}/users/role/{request.session["user"]}'
-        )
+        resp = sess.get(f'{API_URL}/users/role/{user}')
     role = resp.json()
     if role not in ['admin', 'data_scientist']:
-        return RedirectResponse(url='/')
+        return RedirectResponse(url='/login')
 
     mlflow_url = urljoin(MLFLOW_TRACKING_URI, path)
     query_string = request.url.query
