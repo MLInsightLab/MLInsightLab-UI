@@ -12,15 +12,10 @@ select {
 
 .admin-section {
     display: none;
-    /* Initially hidden, visible only for admins */
 }
 
-.admin-section h3 {
-    color: #4a90e2
-}
-
-.admin-section h4 {
-    color: #4a90e2
+.admin-section h3, .admin-section h4 {
+    color: #4a90e2;
 }
 
 .form-group {
