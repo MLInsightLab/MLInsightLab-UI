@@ -33,6 +33,8 @@ templates = Jinja2Templates(directory='templates')
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
 # Function to authenticate
+
+
 def authenticate(username: str, password: str):
     '''
     Authenticate a user
@@ -95,7 +97,7 @@ async def login(request: Request, username: str = Form(...), password: str = For
         request.session['user'] = username
         request.session['last_active'] = time.time()
         return RedirectResponse(url='/', status_code=302)
-    
+
     # Authentication not successful, tell user
     return templates.TemplateResponse('login.html', {'request': request, 'error': 'Invalid credentials'})
 
@@ -118,7 +120,7 @@ async def home(request: Request):
     # Always check for authentication and session
     if 'user' not in request.session or not check_inactivity(request):
         return RedirectResponse(url='/login')
-    
+
     # Return home page template
     return templates.TemplateResponse('home.html', {'request': request})
 
@@ -129,27 +131,27 @@ async def proxy_mlflow(path: str, request: Request):
 
     # Check if the user is authenticated via session
     user = request.session.get('user')
-    
+
     # If not authenticated via session, try basic auth (API)
     if not user:
-        
+
         # Attempt to get credentials from Basic Auth header
         auth = request.headers.get('Authorization')
-        
+
         if auth and auth.startswith('Basic '):
-            
+
             # Decode the credentials from base64
             auth_str = auth[len('Basic '):]
             try:
                 decoded = base64.b64decode(auth_str).decode('utf-8')
                 username, password = decoded.split(':', 1)
             except Exception:
-                raise  HTTPException(401, 'Unauthenticated')
-            
+                raise HTTPException(401, 'Unauthenticated')
+
             # Attempt to authenticate using the provided username and password
             if not authenticate(username, password):
                 raise HTTPException(401, 'Unauthenticated')
-            
+
             # Success
             user = username
         else:
@@ -159,7 +161,7 @@ async def proxy_mlflow(path: str, request: Request):
     with requests.Session() as sess:
         resp = sess.get(f'{API_URL}/users/role/{user}')
     role = resp.json()
-    
+
     # If role is not admin or data scientist, user can't access
     if role not in ['admin', 'data_scientist']:
         return RedirectResponse(url='/login')
@@ -199,7 +201,7 @@ async def user_settings(request: Request):
     # Always check for session
     if 'user' not in request.session or not check_inactivity(request):
         return RedirectResponse(url='/login')
-    
+
     # Return the user management page
     return templates.TemplateResponse('user_management.html', {'request': request})
 
