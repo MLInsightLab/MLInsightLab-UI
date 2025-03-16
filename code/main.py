@@ -155,7 +155,7 @@ async def proxy_mlflow(path: str, request: Request):
             # Success
             user = username
         else:
-            raise HTTPException(401, 'Unauthenticated')
+            return RedirectResponse(url='/login')
 
     # Session is valid or basic authentication is successful
     with requests.Session() as sess:
