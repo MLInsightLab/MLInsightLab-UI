@@ -1,11 +1,32 @@
 body {
-    font-family: 'Arial', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+}
+
+.input-group {
+    position: relative;
+    width: 90%;
+    margin: 15px auto;
+}
+
+.input-group i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    font-size: 16px;
+}
+
+.input-group input {
+    padding-left: 40px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Add smooth animations */
