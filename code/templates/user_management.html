@@ -24,76 +24,90 @@
 
     <div class="main-content">
         <h2>User Management</h2>
-
-        <!-- User Section -->
-        <div class="form-container">
-            <h3>Update Password</h3>
-            <div class="form-group">
-                <label for="new-password">New Password:</label>
-                <input type="password" id="new-password" placeholder="Enter new password" style="width: 25%">
+    
+        <div class="grid-container">
+    
+            <!-- Top: User functions in two columns -->
+            <div class="top-row">
+                <!-- Column 1: Update Password -->
+                <div class="form-container">
+                    <h3>Update Password</h3>
+                    <div class="form-group">
+                        <label for="new-password">New Password:</label>
+                        <input type="password" id="new-password" placeholder="Enter new password" style="width: 75%">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password:</label>
+                        <input type="password" id="confirm-password" placeholder="Confirm new password" style="width: 75%">
+                    </div>
+                    <div class="form-group">
+                        <button onclick="updatePassword()">Update Password</button>
+                    </div>
+                </div>
+    
+                <!-- Column 2: Update API Key -->
+                <div class="form-container">
+                    <h3>Update API Key</h3>
+                    <div class="form-group">
+                        <label for="password-api-key">Password:</label>
+                        <input type="password" id="password-api-key" placeholder="Enter your password" style="width: 75%">
+                    </div>
+                    <div class="form-group">
+                        <button onclick="updateApiKey()">Generate New API Key</button>
+                    </div>
+                    <div id="api-key-display" style="margin-top: 10px; display: none;">
+                        <p><strong>New API Key:</strong> <span id="new-api-key"></span></p>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="confirm-password">Confirm New Password:</label>
-                <input type="password" id="confirm-password" placeholder="Confirm new password" style="width: 25%">
+    
+            <!-- Bottom: Admin Section -->
+            <div class="admin-section" style="display: none;">
+                <h3>Admin Controls</h3>
+                <div class="bottom-row">
+                    <!-- Column 1: Create New User -->
+                    <div class="form-container">
+                        <h4>Create New User</h4>
+                        <div class="form-group">
+                            <label for="new-username">Username:</label>
+                            <input type="text" id="new-username" placeholder="Enter username" style="width: 75%">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-user-password">Password:</label>
+                            <input type="password" id="new-user-password" placeholder="Enter password" style="width: 75%">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-user-role">Role:</label>
+                            <select id="new-user-role" style="width: 50%">
+                                <option value="admin">Admin</option>
+                                <option value="data_scientist">Data Scientist</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="createUser()">Create User</button>
+                        </div>
+                    </div>
+    
+                    <!-- Column 2: Delete User -->
+                    <div class="form-container">
+                        <h4>Delete User</h4>
+                        <div class="form-group">
+                            <label for="delete-username">Select User to Delete:</label>
+                            <select id="delete-username" style="width: 50%">
+                                <!-- Users will be dynamically populated -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="deleteUser()">Delete User</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <button onclick="updatePassword()">Update Password</button>
-            </div>
+    
         </div>
-
-        <!-- New Section: Update API Key -->
-        <div class="form-container">
-            <h3>Update API Key</h3>
-            <div class="form-group">
-                <label for="password-api-key">Password:</label>
-                <input type="password" id="password-api-key" placeholder="Enter your password" style="width: 25%">
-            </div>
-            <div class="form-group">
-                <button onclick="updateApiKey()">Generate New API Key</button>
-            </div>
-            <div id="api-key-display" style="margin-top: 10px; display: none;">
-                <p><strong>New API Key:</strong> <span id="new-api-key"></span></p>
-            </div>
-        </div>
-
-        <!-- Admin Section (Only visible to admins) -->
-        <div class="admin-section">
-            <h3>Admin Controls</h3>
-
-            <h4>Create New User</h4>
-            <div class="form-group">
-                <label for="new-username">Username:</label>
-                <input type="text" id="new-username" placeholder="Enter username" style="width: 25%">
-            </div>
-            <div class="form-group">
-                <label for="new-user-password">Password:</label>
-                <input type="password" id="new-user-password" placeholder="Enter password" style="width: 25%">
-            </div>
-            <div class="form-group">
-                <label for="new-user-role">Role:</label>
-                <select id="new-user-role" style="width: 15%">
-                    <option value="admin">Admin</option>
-                    <option value="data_scientist">Data Scientist</option>
-                    <option value="user">User</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <button onclick="createUser()">Create User</button>
-            </div>
-
-            <h4>Delete User</h4>
-            <div class="form-group">
-                <label for="delete-username">Select User to Delete:</label>
-                <select id="delete-username" style="width: 15%">
-                    <!-- Users will be dynamically populated here -->
-                </select>
-            </div>
-            <div class="form-group">
-                <button onclick="deleteUser()">Delete User</button>
-            </div>
-        </div>
-
     </div>
+    
 
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
