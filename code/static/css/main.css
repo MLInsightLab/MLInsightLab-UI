@@ -57,6 +57,10 @@ h2 {
     overflow-y: auto;
 }
 
+.main-content h2 {
+    text-align: center;
+}
+
 button {
     padding: 10px 20px;
     background-color: #357ABD;

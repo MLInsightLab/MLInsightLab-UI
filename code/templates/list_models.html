@@ -25,26 +25,30 @@
     <div class="main-content">
         <h2>Deployed Models</h2>
 
-        <!-- Search Filter -->
-        <div class="search-container">
-            <input type="text" id="search-box" placeholder="Search models...">
+        <div class="models-wrapper">
+            <!-- Search Filter -->
+            <div class="search-container">
+                <input type="text" id="search-box" placeholder="Search models...">
+            </div>
+
+            <table id="models-table">
+                <tr>
+                    <th onclick="sortTable('model_name')">Model Name</th>
+                    <th onclick="sortTable('model_flavor')">Flavor</th>
+                    <th onclick="sortTable('model_version_or_alias')">Version/Alias</th>
+                    <th>Actions</th>
+                </tr>
+            </table>
+
+            <p id="error-message" class="no-models"></p>
+            <p id="success-message"></p>
         </div>
-
-        <table id="models-table">
-            <tr>
-                <th onclick="sortTable('model_name')">Model Name</th>
-                <th onclick="sortTable('model_flavor')">Flavor</th>
-                <th onclick="sortTable('model_version_or_alias')">Version/Alias</th>
-                <th>Actions</th>
-            </tr>
-        </table>
-
-        <p id="error-message" class="no-models"></p>
-        <p id="success-message"></p>
-
+        
         <!-- Restart Server Button -->
-        <button class="reset-button" onclick="restartJupyter()">Restart Jupyter</button>
-        <button class="reset-button" onclick="resetDeployment()">Restart Deployment Server</button>
+        <div class="reset-buttons-container">
+            <button class="reset-button" onclick="restartJupyter()">Restart Jupyter</button>
+            <button class="reset-button" onclick="resetDeployment()">Restart Deployment Server</button>
+        </div>
 
     </div>
 

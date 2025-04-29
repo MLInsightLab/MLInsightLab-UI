@@ -14,7 +14,7 @@ select {
     display: none;
 }
 
-.admin-section h3, .admin-section h4 {
+.admin-section h2, .admin-section h3 {
     color: #4a90e2;
     margin-bottom: 10px;
 }
@@ -58,4 +58,8 @@ select {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h3 {
+    text-align: center;
 }
