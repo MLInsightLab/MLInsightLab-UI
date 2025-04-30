@@ -45,6 +45,13 @@ h2 {
     font-weight: bold;
 }
 
+h1 {
+    color: #4a90e2;
+    font-size: 34px;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
 .main-content {
     flex: 1;
     display: flex;
@@ -58,6 +65,10 @@ h2 {
 }
 
 .main-content h2 {
+    text-align: center;
+}
+
+.main-content h1 {
     text-align: center;
 }
 
