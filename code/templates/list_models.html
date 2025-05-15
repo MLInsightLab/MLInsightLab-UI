@@ -167,7 +167,7 @@
             if (!confirmation) return;
 
             try {
-                const response = await fetch(`/api/models/unload/${modelName}/${modelFlavor}/${modelVersionOrAlias}`, {
+                const response = await fetch(`/api/models/undeploy/${modelName}/${modelFlavor}/${modelVersionOrAlias}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
