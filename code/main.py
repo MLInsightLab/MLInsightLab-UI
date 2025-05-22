@@ -228,15 +228,3 @@ async def manage_variables(request: Request):
 
     # Return the variables page
     return templates.TemplateResponse('manage_variables.html', {'request': request})
-
-
-@app.get('/data', response_class=HTMLResponse)
-async def data_page(request: Request):
-    '''Data page'''
-
-    # Always check for session
-    if 'user' not in request.session or not check_inactivity(request):
-        return RedirectResponse(url='/login')
-
-    # Return the data page
-    return templates.TemplateResponse('data.html', {'request': request})
