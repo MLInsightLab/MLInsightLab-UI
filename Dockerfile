@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 
 # Update software
-RUN apt update && apt upgrade -y && apt autoremove -y
+RUN apt update && apt upgrade -y && apt autoremove -y && apt install build-essential -y
 
 # Change working directory
 WORKDIR /code
