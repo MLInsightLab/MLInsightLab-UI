@@ -59,7 +59,7 @@
         window.onload = fetchModels;
 
         async function fetchModels() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('mlil-token');
 
             if (!token) {
                 window.location.href = '/login';
@@ -160,7 +160,7 @@
         }
 
         async function removeModel(modelName, modelFlavor, modelVersionOrAlias) {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('mlil-token');
             const confirmation = confirm(`Are you sure you want to remove model '${modelName}'?`);
 
             if (!confirmation) return;
@@ -188,7 +188,7 @@
         }
 
         async function restartJupyter() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('mlil-token');
 
             try {
                 const response = await fetch('/api/restart-jupyter', {
@@ -212,7 +212,7 @@
         }
 
         async function resetDeployment() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('mlil-token');
 
             try {
                 const response = await fetch('/api/reset', {
