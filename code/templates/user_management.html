@@ -1,299 +1,324 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML Insight Lab</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/user_management.css">
-    <link rel="stylesheet" href="/static/css/main.css">
-    <link rel="icon" href="/static/logo.png" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML Insight Lab - User Management</title>
+  <link rel="icon" href="/static/logo.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
 </head>
-<body>
+<body class="flex h-screen bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
 
-    <div class="sidebar">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white dark:bg-gray-800 shadow-lg flex flex-col justify-between">
+    <div>
+      <div class="flex items-center gap-3 px-6 py-5 border-b dark:border-gray-700">
+        <img src="/static/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold text-gray-900 dark:text-gray-100">ML Insight Lab</h1>
+      </div>
+      <nav class="mt-6 flex flex-col space-y-2 px-4">
+        <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900 transition">
+          <i class="fas fa-home"></i> Home
+        </a>
+        <a href="/models" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900 transition">
+          <i class="fas fa-cubes"></i> Models
+        </a>
+        <a href="/variables" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900 transition">
+          <i class="fas fa-sliders-h"></i> User Variables
+        </a>
+        <a href="/users" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900 dark:text-blue-300 transition">
+          <i class="fas fa-users"></i> User Management
+        </a>
+      </nav>
+    </div>
+    <div class="px-4 py-4 border-t dark:border-gray-700 flex justify-between items-center">
+      <a href="/logout" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800 transition">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+      <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+        <i id="theme-toggle-icon" class="fas fa-moon"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto p-8">
+    <h1 class="text-2xl font-bold mb-6">User Management</h1>
+
+    <!-- User Functions -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <!-- Update Password -->
+      <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">Update Password</h3>
+        <input type="password" id="new-password" placeholder="Enter new password"
+          class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <input type="password" id="confirm-password" placeholder="Confirm new password"
+          class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <button onclick="updatePassword()"
+          class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+          Update Password
+        </button>
+      </section>
+
+      <!-- Update API Key -->
+      <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">Update API Key</h3>
+        <input type="password" id="password-api-key" placeholder="Enter your password"
+          class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <button onclick="updateApiKey()"
+          class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+          Generate New API Key
+        </button>
+        <div id="api-key-display" class="mt-4 hidden p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <p><strong>New API Key:</strong> <span id="new-api-key"></span></p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Admin Section -->
+    <section class="admin-section hidden bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+      <h2 class="text-xl font-bold mb-6">Admin Controls</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Create New User -->
         <div>
-            <a href="/"><i class="fas fa-home"></i> Home</a>
-            <a href="/models"><i class="fas fa-cubes"></i> Models</a>
-            <a href="/variables"><i class="fas fa-sliders-h"></i> User Variables</a>
-            <a href="/users"><i class="fas fa-users"></i> User Management</a>
+          <h3 class="text-lg font-semibold mb-4">Create New User</h3>
+          <input type="text" id="new-username" placeholder="Enter new username"
+            class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <input type="password" id="new-user-password" placeholder="Enter new password"
+            class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <label for="new-user-role" class="block mb-2">Role:</label>
+          <select id="new-user-role"
+            class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="admin">Admin</option>
+            <option value="data_scientist">Data Scientist</option>
+            <option value="user">User</option>
+          </select>
+          <button onclick="createUser()"
+            class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+            Create User
+          </button>
         </div>
-        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
 
-    <div class="main-content">
-        <div class="content-header">
-            <h1>User Management</h1>
+        <!-- Delete User -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Delete User</h3>
+          <select id="delete-username"
+            class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <!-- Populated dynamically -->
+          </select>
+          <button onclick="deleteUser()"
+            class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition">
+            Delete User
+          </button>
         </div>
-    
-        <div class="grid-container">
-    
-            <!-- Top: User functions in two columns -->
-            <div class="top-row">
-                <!-- Column 1: Update Password -->
-                <div class="form-container">
-                    <h3>Update Password</h3>
-                    <div class="form-group">
-                        <input type="password" id="new-password" placeholder="Enter new password" style="width: 75%">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="confirm-password" placeholder="Confirm new password" style="width: 75%">
-                    </div>
-                    <div class="form-group">
-                        <button onclick="updatePassword()">Update Password</button>
-                    </div>
-                </div>
-    
-                <!-- Column 2: Update API Key -->
-                <div class="form-container">
-                    <h3>Update API Key</h3>
-                    <div class="form-group">
-                        <input type="password" id="password-api-key" placeholder="Enter your password" style="width: 75%">
-                    </div>
-                    <div class="form-group">
-                        <button onclick="updateApiKey()">Generate New API Key</button>
-                    </div>
-                    <div id="api-key-display" style="margin-top: 10px; display: none;">
-                        <p><strong>New API Key:</strong> <span id="new-api-key"></span></p>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Bottom: Admin Section -->
-            <div class="admin-section" style="display: none;">
-                <h2>Admin Controls</h2>
-                <div class="bottom-row">
-                    <!-- Column 1: Create New User -->
-                    <div class="form-container">
-                        <h3>Create New User</h3>
-                        <div class="form-group">
-                            <input type="text" id="new-username" placeholder="Enter new username" style="width: 75%">
-                        </div>
-                        <div class="form-group">
-                            <input type="password" id="new-user-password" placeholder="Enter new password" style="width: 75%">
-                        </div>
-                        <div class="form-group">
-                            <label for="new-user-role">Role:</label>
-                            <select id="new-user-role" style="width: 50%">
-                                <option value="admin">Admin</option>
-                                <option value="data_scientist">Data Scientist</option>
-                                <option value="user">User</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button onclick="createUser()">Create User</button>
-                        </div>
-                    </div>
-    
-                    <!-- Column 2: Delete User -->
-                    <div class="form-container">
-                        <h3>Delete User</h3>
-                        <div class="form-group">
-                            <select id="delete-username" style="width: 50%">
-                                <!-- Users will be dynamically populated -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button onclick="deleteUser()">Delete User</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-        </div>
-    </div>
-    
+      </div>
+    </section>
+  </main>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            const token = localStorage.getItem('mlil-token');
-            const username = localStorage.getItem('mlil-username'); 
+  <!-- Toast container -->
+  <div id="toast-container" class="fixed top-4 right-4 space-y-2 z-50"></div>
 
-            if (!username) {
-                console.error("Username not found in local storage.");
-                return;
-            }
+  <script>
+    // Toast function
+    function showToast(message, type = "success") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = `px-4 py-3 rounded-lg shadow text-white ${type === "success" ? "bg-green-600" : "bg-red-600"}`;
+      toast.innerText = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add("opacity-0", "transition");
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+    }
 
-            try {
-                const roleResponse = await fetch(`/api/users/role/${username}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
+    // Dark mode handling
+    const themeToggle = document.getElementById("theme-toggle");
+    const themeIcon = document.getElementById("theme-toggle-icon");
+    function setTheme(dark) {
+      if (dark) {
+        document.documentElement.classList.add("dark");
+        themeIcon.classList.remove("fa-moon");
+        themeIcon.classList.add("fa-sun");
+      } else {
+        document.documentElement.classList.remove("dark");
+        themeIcon.classList.remove("fa-sun");
+        themeIcon.classList.add("fa-moon");
+      }
+    }
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(prefersDark);
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(!isDark);
+    });
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+      setTheme(e.matches);
+    });
 
-                if (roleResponse.ok) {
-                    const roleData = await roleResponse.json();
-                    if (roleData === 'admin') {
-                        document.querySelector('.admin-section').style.display = 'block'; // Show admin controls
+    // Role-based rendering
+    document.addEventListener("DOMContentLoaded", async function () {
+      const token = localStorage.getItem('mlil-token');
+      const username = localStorage.getItem('mlil-username'); 
+      if (!username) return;
 
-                        // Fetch and populate users in the dropdown list
-                        const usersResponse = await fetch('/api/users/list', {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                            }
-                        });
-
-                        if (usersResponse.ok) {
-                            const users = await usersResponse.json();
-                            const selectElement = document.getElementById('delete-username');
-                            users.forEach(user => {
-                                const option = document.createElement('option');
-                                option.value = user[0];
-                                option.textContent = user[0];
-                                selectElement.appendChild(option);
-                            });
-                        } else {
-                            console.error("Error fetching users list.");
-                        }
-                    }
-                } else {
-                    console.error("Error fetching user role: ", roleResponse.status, roleResponse.statusText);
-                }
-            } catch (error) {
-                console.error("Fetch error: ", error);
-            }
+      try {
+        const roleResponse = await fetch(`/api/users/role/${username}`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` },
         });
 
-        async function updatePassword() {
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            const token = localStorage.getItem('mlil-token');
-            const username = localStorage.getItem('mlil-username');
+        if (roleResponse.ok) {
+          const roleData = await roleResponse.json();
+          if (roleData === 'admin') {
+            document.querySelector('.admin-section').classList.remove("hidden");
 
-            if (!newPassword || !confirmPassword) {
-                alert("Please fill in both password fields.");
-                return;
+            // Fetch users for deletion dropdown
+            const usersResponse = await fetch('/api/users/list', {
+              method: 'GET',
+              headers: { 'Authorization': `Bearer ${token}` },
+            });
+
+            if (usersResponse.ok) {
+              const users = await usersResponse.json();
+              const selectElement = document.getElementById('delete-username');
+              users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user[0];
+                option.textContent = user[0];
+                selectElement.appendChild(option);
+              });
             }
-
-            if (newPassword !== confirmPassword) {
-                alert("Passwords do not match!");
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/users/password/issue/${username}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 'new_password': newPassword }),
-                });
-
-                if (response.ok) {
-                    alert("Password updated successfully.");
-                } else {
-                    alert("Error updating password.");
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-
-            document.getElementById('new-password').value = '';
-            document.getElementById('confirm-password').value = '';
+          }
         }
+      } catch (error) {
+        console.error("Fetch error: ", error);
+      }
+    });
 
-        async function updateApiKey() {
-            const password = document.getElementById('password-api-key').value;
-            const username = localStorage.getItem('mlil-username');
+    async function updatePassword() {
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const token = localStorage.getItem('mlil-token');
+      const username = localStorage.getItem('mlil-username');
 
-            authentication = btoa(`${username}:${password}`)
-            
-            if (!password) {
-                alert("Please enter your password.");
-                return;
-            }
+      if (!newPassword || !confirmPassword) {
+        showToast("Please fill in both password fields.", "error");
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        showToast("Passwords do not match!", "error");
+        return;
+      }
 
-            try {
-                const response = await fetch(`/api/users/api_key/issue/${username}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Basic ${authentication}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
+      try {
+        const response = await fetch(`/api/users/password/issue/${username}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 'new_password': newPassword }),
+        });
 
-                if (response.ok) {
-                    const apiKey = await response.json();
-                    document.getElementById('api-key-display').style.display = 'block';
-                    document.getElementById('new-api-key').textContent = apiKey;
-                } else {
-                    alert("Error generating API key.");
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-
-            document.getElementById('password-api-key').value = '';
+        if (response.ok) {
+          showToast("Password updated successfully.");
+        } else {
+          showToast("Error updating password.", "error");
         }
+      } catch {
+        showToast("Error updating password.", "error");
+      }
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+    }
 
-        async function createUser() {
-            const username = document.getElementById('new-username').value;
-            const password = document.getElementById('new-user-password').value;
-            const role = document.getElementById('new-user-role').value;
-            const token = localStorage.getItem('mlil-token');
-
-            if (!username || !password) {
-                alert("Please fill in all fields.");
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/users/create', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ "username": username, "password": password, "role": role }),
-                });
-
-                if (response.ok) {
-                    alert("User created successfully.");
-                } else {
-                    alert("Error creating user.");
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            document.getElementById('new-username').value = '';
-            document.getElementById('new-user-password').value = '';
+    async function updateApiKey() {
+      const password = document.getElementById('password-api-key').value;
+      const username = localStorage.getItem('mlil-username');
+      if (!password) {
+        showToast("Please enter your password.", "error");
+        return;
+      }
+      const authentication = btoa(`${username}:${password}`);
+      try {
+        const response = await fetch(`/api/users/api_key/issue/${username}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Basic ${authentication}`, 'Content-Type': 'application/json' },
+        });
+        if (response.ok) {
+          const apiKey = await response.json();
+          document.getElementById('api-key-display').classList.remove("hidden");
+          document.getElementById('new-api-key').textContent = apiKey;
+          showToast("API key generated successfully.");
+        } else {
+          showToast("Error generating API key.", "error");
         }
+      } catch {
+        showToast("Error generating API key.", "error");
+      }
+      document.getElementById('password-api-key').value = '';
+    }
 
-        async function deleteUser() {
-            const username = document.getElementById('delete-username').value;
-            const token = localStorage.getItem('mlil-token');
+    async function createUser() {
+      const username = document.getElementById('new-username').value;
+      const password = document.getElementById('new-user-password').value;
+      const role = document.getElementById('new-user-role').value;
+      const token = localStorage.getItem('mlil-token');
 
-            if (!username) {
-                alert("Please select a user to delete.");
-                return;
-            }
-
-            if (username === localStorage.getItem('mlil-username')){
-                alert('Cannot delete self!');
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/users/delete/${username}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                if (response.ok) {
-                    alert("User deleted successfully.");
-                } else {
-                    alert("Error deleting user.");
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+      if (!username || !password) {
+        showToast("Please fill in all fields.", "error");
+        return;
+      }
+      try {
+        const response = await fetch('/api/users/create', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ "username": username, "password": password, "role": role }),
+        });
+        if (response.ok) {
+          showToast("User created successfully.");
+        } else {
+          showToast("Error creating user.", "error");
         }
-    </script>
+      } catch {
+        showToast("Error creating user.", "error");
+      }
+      document.getElementById('new-username').value = '';
+      document.getElementById('new-user-password').value = '';
+    }
+
+    async function deleteUser() {
+      const username = document.getElementById('delete-username').value;
+      const token = localStorage.getItem('mlil-token');
+
+      if (!username) {
+        showToast("Please select a user to delete.", "error");
+        return;
+      }
+      if (username === localStorage.getItem('mlil-username')) {
+        showToast("Cannot delete self!", "error");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/users/delete/${username}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        });
+        if (response.ok) {
+          showToast("User deleted successfully.");
+          document.querySelector(`#delete-username option[value="${username}"]`)?.remove();
+        } else {
+          showToast("Error deleting user.", "error");
+        }
+      } catch {
+        showToast("Error deleting user.", "error");
+      }
+    }
+  </script>
 </body>
 </html>

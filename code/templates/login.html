@@ -1,74 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML Insight Lab</title>
-    <link rel="stylesheet" href="/static/css/login.css">
-    <link rel="stylesheet" href="/static/css/main.css">
-    <link rel="icon" href="/static/logo.png" type="image/png"> <!-- Favicon -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML Insight Lab - Login</title>
+  <link rel="icon" href="/static/logo.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
 </head>
-<body>
-    <div class="login-container">
-        <img src="/static/logo.png" alt="Logo" class="logo">
-        <h1>ML Insight Lab</h1>
-        <form id="loginForm">
-            <input type="text" id="username" name="username" placeholder="Username" required><br>
-            <input type="password" id="password" name="password" placeholder="Password" required><br>
-            <input type="submit" value="Login">
-        </form>
-        <p id="error-message" class="warning-message"></p>
+<body class="flex items-center justify-center min-h-screen bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
+
+  <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+    <div class="flex flex-col items-center mb-6">
+      <img src="/static/logo.png" alt="Logo" class="w-16 h-16 mb-3">
+      <h1 class="text-2xl font-bold">ML Insight Lab</h1>
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent the default form submission
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <input type="text" id="username" name="username" placeholder="Username" required
+          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      </div>
+      <div>
+        <input type="password" id="password" name="password" placeholder="Password" required
+          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      </div>
+      <button type="submit"
+        class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+        Login
+      </button>
+    </form>
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+    <p id="error-message" class="mt-4 text-sm text-red-500 text-center"></p>
 
-            // Login for session management
-            const formData = new URLSearchParams();
-            formData.append('username', username);
-            formData.append('password', password);
+    <!-- Dark Mode Toggle -->
+    <div class="mt-6 flex justify-center">
+      <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+        <i id="theme-toggle-icon" class="fas fa-moon"></i>
+      </button>
+    </div>
+  </div>
 
-            try {
-                // Send form to /login for session-based login
-                const sessionResponse = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData,
-                });
+  <script>
+    // Login handling
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
 
-                // Send form to /api/token for token-based login
-                const tokenResponse = await fetch('/api/token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData,
-                });
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-                if (tokenResponse.ok) {
-                    const data = await tokenResponse.json();
-                    // Store the token in local storage or session storage
-                    localStorage.setItem('mlil-username', username);
-                    localStorage.setItem('mlil-token', data.access_token);
-                } else {
-                    document.getElementById('error-message').innerText = 'Invalid token credentials';
-                }
+      const formData = new URLSearchParams();
+      formData.append('username', username);
+      formData.append('password', password);
 
-                if (sessionResponse.redirected) {
-                    window.location.href = sessionResponse.url;  // Redirect to home if login succeeds
-                } else {
-                    document.getElementById('error-message').innerText = 'Invalid session credentials';
-                }
-            } catch (error) {
-                document.getElementById('error-message').innerText = 'An error occurred. Please try again.';
-            }
+      try {
+        const sessionResponse = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData,
         });
-    </script>
+
+        const tokenResponse = await fetch('/api/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData,
+        });
+
+        if (tokenResponse.ok) {
+          const data = await tokenResponse.json();
+          localStorage.setItem('mlil-username', username);
+          localStorage.setItem('mlil-token', data.access_token);
+        } else {
+          document.getElementById('error-message').innerText = 'Invalid token credentials';
+        }
+
+        if (sessionResponse.redirected) {
+          window.location.href = sessionResponse.url;
+        } else {
+          document.getElementById('error-message').innerText = 'Invalid session credentials';
+        }
+      } catch (error) {
+        document.getElementById('error-message').innerText = 'An error occurred. Please try again.';
+      }
+    });
+
+    // Dark mode handling
+    const themeToggle = document.getElementById("theme-toggle");
+    const themeIcon = document.getElementById("theme-toggle-icon");
+
+    function setTheme(dark) {
+      if (dark) {
+        document.documentElement.classList.add("dark");
+        themeIcon.classList.remove("fa-moon");
+        themeIcon.classList.add("fa-sun");
+      } else {
+        document.documentElement.classList.remove("dark");
+        themeIcon.classList.remove("fa-sun");
+        themeIcon.classList.add("fa-moon");
+      }
+    }
+
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(prefersDark);
+
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(!isDark);
+    });
+
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+      setTheme(e.matches);
+    });
+  </script>
 </body>
 </html>
