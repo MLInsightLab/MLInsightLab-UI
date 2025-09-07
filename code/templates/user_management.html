@@ -49,44 +49,47 @@
 
   <!-- Main Content -->
   <main class="flex-1 overflow-y-auto p-8">
-    <h1 class="text-2xl font-bold mb-6">User Management</h1>
+    <h1 class="text-2xl font-bold mb-8">User Management</h1>
 
-    <!-- User Functions -->
-    <div class="grid md:grid-cols-2 gap-6 mb-8">
-      <!-- Update Password -->
-      <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Update Password</h3>
-        <input type="password" id="new-password" placeholder="Enter new password"
-          class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        <input type="password" id="confirm-password" placeholder="Confirm new password"
-          class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        <button onclick="updatePassword()"
-          class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-          Update Password
-        </button>
-      </section>
-
-      <!-- Update API Key -->
-      <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-        <h3 class="text-lg font-semibold mb-4">Update API Key</h3>
-        <input type="password" id="password-api-key" placeholder="Enter your password"
-          class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        <button onclick="updateApiKey()"
-          class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
-          Generate New API Key
-        </button>
-        <div id="api-key-display" class="mt-4 hidden p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-          <p><strong>New API Key:</strong> <span id="new-api-key"></span></p>
+    <!-- User Settings -->
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-4">User Settings</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Update Password -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+          <h3 class="text-lg font-semibold mb-4">Update Password</h3>
+          <input type="password" id="new-password" placeholder="Enter new password"
+            class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <input type="password" id="confirm-password" placeholder="Confirm new password"
+            class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <button onclick="updatePassword()"
+            class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+            Update Password
+          </button>
         </div>
-      </section>
-    </div>
 
-    <!-- Admin Section -->
-    <section class="admin-section hidden bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-      <h2 class="text-xl font-bold mb-6">Admin Controls</h2>
+        <!-- Update API Key -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+          <h3 class="text-lg font-semibold mb-4">Update API Key</h3>
+          <input type="password" id="password-api-key" placeholder="Enter your password"
+            class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <button onclick="updateApiKey()"
+            class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+            Generate New API Key
+          </button>
+          <div id="api-key-display" class="mt-4 hidden p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <p><strong>New API Key:</strong> <span id="new-api-key"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Controls -->
+    <section class="admin-section hidden">
+      <h2 class="text-xl font-semibold mb-4">Admin Controls</h2>
       <div class="grid md:grid-cols-2 gap-6">
         <!-- Create New User -->
-        <div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
           <h3 class="text-lg font-semibold mb-4">Create New User</h3>
           <input type="text" id="new-username" placeholder="Enter new username"
             class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -106,7 +109,7 @@
         </div>
 
         <!-- Delete User -->
-        <div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
           <h3 class="text-lg font-semibold mb-4">Delete User</h3>
           <select id="delete-username"
             class="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
