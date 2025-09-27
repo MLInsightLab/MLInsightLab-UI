@@ -9,6 +9,3 @@ COPY code/ /code/
 # Install dependencies
 RUN pip install --no-cache-dir --upgrade pip uv && \
     uv pip install --system --no-cache-dir --upgrade -r /code/requirements.txt
-    
-# Expose necessary port
-EXPOSE 1122
