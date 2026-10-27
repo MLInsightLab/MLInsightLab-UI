@@ -85,7 +85,7 @@ def check_inactivity(request: Request):
 @app.get('/login', response_class=HTMLResponse)
 async def login_form(request: Request):
     '''Login page'''
-    return templates.TemplateResponse('login.html', {'request': request})
+    return templates.TemplateResponse(name = 'login.html', context = {'request': request})
 
 
 @app.post('/login')
@@ -99,7 +99,7 @@ async def login(request: Request, username: str = Form(...), password: str = For
         return RedirectResponse(url='/', status_code=302)
 
     # Authentication not successful, tell user
-    return templates.TemplateResponse('login.html', {'request': request, 'error': 'Invalid credentials'})
+    return templates.TemplateResponse(name = 'login.html', context = {'request': request, 'error': 'Invalid credentials'})
 
 
 @app.get('/logout')
@@ -122,7 +122,7 @@ async def home(request: Request):
         return RedirectResponse(url='/login')
 
     # Return home page template
-    return templates.TemplateResponse('home.html', {'request': request})
+    return templates.TemplateResponse(name = 'home.html', context = {'request': request})
 
 
 @app.api_route('/mlflow/{path:path}', methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -203,7 +203,7 @@ async def user_settings(request: Request):
         return RedirectResponse(url='/login')
 
     # Return the user management page
-    return templates.TemplateResponse('user_management.html', {'request': request})
+    return templates.TemplateResponse(name = 'user_management.html', context = {'request': request})
 
 
 @app.get('/models', response_class=HTMLResponse)
@@ -215,7 +215,7 @@ async def list_models(request: Request):
         return RedirectResponse(url='/login')
 
     # Return the models page
-    return templates.TemplateResponse('list_models.html', {'request': request})
+    return templates.TemplateResponse(name = 'list_models.html', context = {'request': request})
 
 
 @app.get('/variables', response_class=HTMLResponse)
